@@ -120,7 +120,7 @@ router.get('/mee',  authDoctor, async (req, res) => {
         }        
 })
 
-/// route to all profile of doctor
+/// route to all profile of doctor all user can see 
 // router :: router : http://localhost:5000/api/profile/
 router.get("/", async(req,res) => {
     try{
@@ -197,16 +197,30 @@ router.post('/doctor/:doctor_id',[ authUser,
 // @desc    delete   Comment on a profile
 // @access  Private
 
-router.delete("/doctor/:doctor_id/:review_id ",authuser, async(req,res=>{ 
+router.delete("/doctor/:doctor_id/:review_id ",authuser, async (req, res)=>{ 
 
     try{ 
             const profile = await Profile.findOne({doctor: req.params.doctor_id}); 
            
-            const review = await profile.review.find(review=> )    
+            const review = await profile.review.find(review=> review.id === req.params.review_id )    
             const text =  await review.text  ; 
 
             //  make sure review is exist 
-
+            if(!review) {
+                return res.status(404).json({ msg: "Review not exist "});
+            }
+            // Check user
+            if(review.user.toString() !== req.user.id) {
+                return res.status(404).json({ msg: "User not autherized" });
+            }
+           
+            // get remove index
+            const removeIndex = profile.review.map( review => review.text).indexOf(text);
+            
+            profile.review.splice(removeIndex, 1);
+    
+            await profile.save();
+            res.json(profile);
 
 
     }catch(err) { 
