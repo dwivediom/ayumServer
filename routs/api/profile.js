@@ -197,7 +197,7 @@ router.post('/doctor/:doctor_id',[ authUser,
 // @desc    delete   Comment on a profile
 // @access  Private
 
-router.delete("/doctor/:doctor_id/:review_id ",authuser, async (req, res)=>{ 
+router.delete("/doctor/:doctor_id/:review_id ",authUser, async (req, res)=>{ 
 
     try{ 
             const profile = await Profile.findOne({doctor: req.params.doctor_id}); 
@@ -226,7 +226,7 @@ router.delete("/doctor/:doctor_id/:review_id ",authuser, async (req, res)=>{
     }catch(err) { 
            console.log(err.message)
     }
-}))
+})
 
 
 
