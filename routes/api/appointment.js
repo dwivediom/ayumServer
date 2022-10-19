@@ -4,9 +4,9 @@ const router =  express.Router();
 const {check , validationResult} = require('express-validator');
 
 const authUser = require('../../middleware/authUser')
-const User= require("../../modles/User"); 
-const Doctor = require('../../modles/Doctor'); 
-const Profile = require('../../modles/Profile');
+const User= require("../../model/User"); 
+const Doctor = require('../../model/Doctor'); 
+const Profile = require('../../model/Profile');
 
 //route :  http://localhost:5000/api/appointment/:doctor_id 
 router.post("/:doctor_id",[ authUser, 

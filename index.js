@@ -3,10 +3,10 @@ const express= require('express');
 const app = express();
 const mongoose = require('mongoose');
 const db = require('../backend/config/keys').mongoURI;
-const user= require('../backend/routs/api/user')
-const doctor = require('../backend/routs/api/doctor');
-const appointment = require('../backend/routs/api/appointment');
-const profile = require('../backend/routs/api/profile')
+const user= require('../backend/routes/api/user')
+const doctor = require('../backend/routes/api/doctor');
+const appointment = require('../backend/routes/api/appointment');
+const profile = require('../backend/routes/api/profile')
 mongoose.connect(db )
 .then( () => {console.log("database connection established")} )
 .catch( (err) => {console.log("database connection failed",err)} );

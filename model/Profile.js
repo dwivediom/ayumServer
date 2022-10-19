@@ -104,8 +104,8 @@ const ProfileSchema = new mongoose.Schema({
             
         }
     ], 
-    experiance:[
-        {
+    experience:[
+        {    
             position:{ 
                 type: String, 
             }, 

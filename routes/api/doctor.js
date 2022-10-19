@@ -7,9 +7,10 @@ const app = express();
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const Doctor = require("../../modles/Doctor");
+const Doctor = require("../../model/Doctor");
 const authDoctor = require('../../middleware/authDoctor');
 const secretkey = process.env.secretkey
+const Profile = require('../../model/Profile'); 
 
 // login in not rquierd  
 //  doctor registration : http://localhost:5000/api/doctor/register 
@@ -139,6 +140,25 @@ router.post('/register', [
             res.status(500).send("Server Error");
          } 
       })
+
+       
+      // @api    
+      // @des   delete doctor profile 
+
+
+     
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     module.exports= router; 
