@@ -84,7 +84,7 @@ router.post('/register', [
 
 
 router.post("/login",[
-    check('email',"invalid email").isEmail(),
+  check("phone", "please enter valid phone").isMobilePhone(),
     check('password','enter password').exists()
 
 ],async(req, res) =>{ 
@@ -93,13 +93,13 @@ router.post("/login",[
     if ( !error.isEmpty()){ 
        return res.status(400).json({ error: error.array() })
     }
-        const { email ,password } = req.body
+        const { email ,password ,phone } = req.body
    try{ 
-      let user = await User.findOne({email})
+      let user = await User.findOne({phone})
       if(!user){ 
-        return res.status(404).json({ error:"invalid email" })
+        return res.status(404).json({ error:"invalid phone" })
       }
-
+          
         
       const isMatch = await bcrypt.compare(password, user.password)
 
