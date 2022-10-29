@@ -18,16 +18,17 @@ const authUser= require("../../middleware/authUser")
 
 //user registration route : api/users 
 router.post('/register', [
-    check("email", "please enter valid email address").isEmail(),
+    // check("email", "please enter valid email address").isEmail(),
+    check("phone", "please enter valid phone").isMobilePhone(),
 
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    const { name, email, password } = req.body;
+    const { name, email,password,phone} = req.body;
     try {
-        let user = await User.findOne({ email })
+        let user = await User.findOne({ phone })
         if (user) {
             res.status(400).json({ error: " user already exisit " })
         }
@@ -38,7 +39,7 @@ router.post('/register', [
             d: 'mm'
         });
         user = new User({
-            name, email, avatar, password
+            name, email, avatar, password,phone
         })
         // json webtoken 
 

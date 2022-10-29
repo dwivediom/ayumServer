@@ -18,9 +18,9 @@ const Profile = require('../../model/Profile');
 
 router.post('/register', [
     check("name", 'Name is required').not().isEmpty(),
-    check("email", ' Eenter vailid Email ').isEmail(),
-    check("phone", ' Eenter vailid Phone ').isLength({min:10, max:12})
-
+    check("email", ' Eenter valid Email ').isEmail(),
+    check("phone", ' Eenter valid Phone ').isLength({min:10, max:12}),
+    check('city', 'enter city ').not().isEmpty()
 ],
     async (req, res) => {
         const error = validationResult(req);
@@ -29,13 +29,13 @@ router.post('/register', [
         }
 
 
-        const { name, email,phone, password } = req.body;
+        const { name, email,phone, password,city } = req.body;
         try {
 
             // to check doctor already exists
             let doctor = await Doctor.findOne({ email })
             if (doctor) {
-                return res.status(400).json({ error: "doector already exists" });
+                return res.status(400).json({ error: "doctor already exists" });
             }
             //get doctor gravtar
             const avatar = gravtar.url(email, {
@@ -49,7 +49,8 @@ router.post('/register', [
                 email,
                 avatar,
                 password,
-                phone
+                phone,
+                city 
             })
             //ectrypt password 
             const salt = await bcrypt.genSalt(6);

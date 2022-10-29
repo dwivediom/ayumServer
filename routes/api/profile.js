@@ -27,7 +27,7 @@ const Profile = require('../../model/Profile');
 
 router.post('/createprofile', [authDoctor,
 [
-    check('status', 'Status is requierd ' ).not().isEmpty()
+    // check('status', 'Status is requierd ' ).not().isEmpty()
 ]
 
 ]
@@ -44,8 +44,8 @@ router.post('/createprofile', [authDoctor,
             timing, 
             bio, 
             status, 
-            specilalists, 
-            ruppess, 
+            specialist, 
+            fees, 
             youtube,
             facebook,
             twitter,
@@ -65,8 +65,8 @@ if(location){ profileFields.location= location} ;
 if(timing){ profileFields.timing= timing} ;
 if(bio){ profileFields.bio= bio} ; 
 if(status){ profileFields.status= status} ;
-if(specilalists){ profileFields.specilalists=specilalists}; 
-if(ruppess){ profileFields.ruppess=ruppess} ; 
+if(specialist){ profileFields.specialist=specialist}; 
+if(fees){ profileFields.fees=fees} ; 
 
 
 //buld socil objests 
@@ -96,7 +96,7 @@ if(instagram) profileFields.social.instagram=instagram;
         res.json(profile);
     }catch(err){ 
         console.log(err.message)
-        res.status(400).json("server error")
+        res.status(400).json({error:err.message})
     }
 
 });
@@ -124,7 +124,7 @@ router.get('/mee',  authDoctor, async (req, res) => {
 // router :: router : http://localhost:5000/api/profile/
 router.get("/", async(req,res) => {
     try{
-        let profile = await Profile.find().populate("doctor,"["name","avatar"])
+        let profile = await Profile.find().populate("doctor",["name","avatar","email", "phone"])
         res.json(profile)
     }catch(err){ 
         console.log(err.message)

@@ -21,9 +21,13 @@ avtar: {
     type: String
 }, 
 hospital: { 
-       type: Boolean, 
-       default : false 
+       type: String, 
+       default : 'private doctor'
 
+},
+city:{
+ type:String , 
+ required : true 
 },
 date: { 
     type: Date,

@@ -25,9 +25,10 @@ const ProfileSchema = new mongoose.Schema({
     }, 
     status:{ 
         type: String, 
-      required: true, 
+      
     }, 
-    specialists: { 
+    specialist: { 
+         required : true,
         type: String, 
 
     } , 
