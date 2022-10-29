@@ -8,12 +8,12 @@ const User= require("../../model/User");
 const Doctor = require('../../model/Doctor'); 
 const Profile = require('../../model/Profile');
 
-//route :  http://localhost:5000/api/appointment/:doctor_id 
+//route :  http://localhost:5000/api/appointment/:doctorid 
 router.post("/:doctor_id",[ authUser, 
 [
-check("name", "patient name is required").not().isEmpty(), 
+check("patientname", "patient name is required").not().isEmpty(), 
 check("age"," age is required").not().isEmpty(), 
-check("discription"," description is required").not().isEmpty()]
+check("description"," description is required").not().isEmpty()]
 
 
 ], async(req, res )=> {
@@ -23,11 +23,15 @@ check("discription"," description is required").not().isEmpty()]
        }
 
 try{ 
-   
+  
     const user = await User.findById(req.user.id).select('-password');
+  
     const doctor = await Doctor.findById(req.params.doctor_id).select('-password');
-    const profile = await Profile.findById({doctor: req.params.doctor_id})
-
+    console.log("doctor:" ,req.params.doctor_id )
+    const profile = await Profile.findOne({doctor: req.params.doctor_id})
+      console.log("doctor:" )
+      
+       console.log("profile:", profile)
 
     // create booking id 
     function appointmentgenrator(){ 
@@ -47,7 +51,7 @@ try{
             }
                 return  id ; 
         }
-              
+      }
           const create_id = new appointmentgenrator();
            const appointmentId = create_id.generate(); 
 
@@ -59,7 +63,7 @@ try{
             status: req.body.status , 
             age: req.body.age,
             date: req.body.date, 
-            discription: req.body.discription , 
+            description: req.body.description , 
             avatar: user.avatar ,
             name: user.name ,
             user    : req.user.id 
@@ -73,15 +77,16 @@ try{
              status: req.body.status ,
              age: req.body.age ,
              date: req.body.date ,
-             discription: req.body.discription ,
+             description: req.body.description ,
              avatar: doctor.avatar ,
              name: doctor.name ,             
              doctor: doctor.id
            }
 
             
-    }
-    profile.patient.unshift(newPatinet); 
+    
+    console.log( "pofile.paitnt:" ,  profile.patients)
+    profile.patients.unshift(newPatinet); 
     await  profile.save(); 
 
     user.appointment.unshift(newAppointment)
