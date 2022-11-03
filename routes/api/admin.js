@@ -7,10 +7,11 @@ const authUser = require('../../middleware/authUser')
 const User= require("../../model/User"); 
 const Doctor = require('../../model/Doctor'); 
 const Profile = require('../../model/Profile');
-
+const time = 1000*60*60*24
 
 router.get("/start27" , async (req,res)=>{
     const dailyappo = await DailyAppo.findOne(); 
+    
       try{
       setInterval(async() => {
         console.log("working")
@@ -19,7 +20,7 @@ router.get("/start27" , async (req,res)=>{
          if(dailyappo){
             await DailyAppo.collection.drop();
          }
-      }, 2000);
+      }, time);
       res.json({msg:'condown started '})
     }catch(err){ 
         console.log(err.message)
