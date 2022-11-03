@@ -8,6 +8,8 @@ const doctor = require('../backend/routes/api/doctor');
 const appointment = require('../backend/routes/api/appointment');
 const profile = require('../backend/routes/api/profile')
 const search = require('../backend/routes/api/search')
+const dailyappo= require('../backend/routes/api/dailyAppointemnt')
+const admin=require('../backend/routes/api/admin')
 mongoose.connect(db )
 .then( () => {console.log("database connection established")} )
 .catch( (err) => {console.log("database connection failed",err)} );
@@ -24,6 +26,7 @@ app.use(express.json({ extended: false}));
  app.use("/api/appointment", appointment)
  app.use("/api/profile",profile)
  app.use("/api",search)
-
+ app.use("/api",dailyappo)
+ app.use("/admin", admin)
 const port = process.env.PORT || 5000;
 app.listen(port,() => {console.log(`server listening on ${port}`)});

@@ -11,15 +11,14 @@ const Doctor = require("../../model/Doctor");
 const authDoctor = require('../../middleware/authDoctor');
 const secretkey = process.env.secretkey
 const Profile = require('../../model/Profile'); 
-
+const DailyAppo = require('../../model/Dailyappointment')
 // login in not rquierd  
 //  doctor registration : http://localhost:5000/api/doctor/register 
 
 
 router.post('/register', [
     check("name", 'Name is required').not().isEmpty(),
-    check("email", ' Eenter valid Email ').isEmail(),
-    check("phone", ' Eenter valid Phone ').isLength({min:10, max:12}),
+    check("phone", ' Eenter valid Phone ').isLength({min:10, max:13}),
     check('city', 'enter city ').not().isEmpty()
 ],
     async (req, res) => {
@@ -33,7 +32,7 @@ router.post('/register', [
         try {
 
             // to check doctor already exists
-            let doctor = await Doctor.findOne({ email })
+            let doctor = await Doctor.findOne({ phone })
             if (doctor) {
                 return res.status(400).json({ error: "doctor already exists" });
             }
@@ -52,6 +51,7 @@ router.post('/register', [
                 phone,
                 city 
             })
+
             //ectrypt password 
             const salt = await bcrypt.genSalt(6);
             doctor.password = await bcrypt.hash(password, salt);
@@ -59,16 +59,14 @@ router.post('/register', [
 
             // Return jsonwebtoken 
 
-            const playload = {
+            const payload = {
                 doctor: {
                     id: doctor.id
                 }
             }
+            
 
-
-
-
-            jwt.sign(playload, secretkey, { expiresIn: 360000 },
+            jwt.sign(payload, secretkey, { expiresIn: 360000 },
                 (err, token) => {
                     if (err) throw err;
                     res.json({ token })
@@ -88,7 +86,7 @@ router.post('/register', [
     // route : http://localhost:5000/api/doctor/register 
 
    router.post('/login',[
-       check('email', "invalid email address").isEmail(), 
+    check("phone", ' Eenter valid Phone ').isLength({min:10, max:13}),
        check('password', "invalid password").exists()
    ], async(req, res)=>{ 
               const error = validationResult(req) ;
@@ -97,11 +95,11 @@ router.post('/register', [
             }
 
 
-          const { email , password  } = req.body; 
+          const { phone , password  } = req.body; 
            try{ 
             // if user dose not exixt 
 
-            const doctor = await Doctor.findOne({email})
+            const doctor = await Doctor.findOne({phone})
             if( !doctor){ 
                 return res.status(400).json({ errors:"user not found " });
             }

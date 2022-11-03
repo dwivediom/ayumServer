@@ -85,7 +85,7 @@ router.post('/register', [
 
 router.post("/login",[
   check("phone", "please enter valid phone").isMobilePhone(),
-    check('password','enter password').exists()
+    // check('password','enter password').exists()
 
 ],async(req, res) =>{ 
     

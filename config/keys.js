@@ -1,3 +1,3 @@
 module.exports = { 
-    mongoURI: 'mongodb://localhost:27017/medwith'
+    mongoURI: 'mongodb+srv://ayumdev:Mr%40developer@cluster0.edjuifa.mongodb.net/ayum'
 };

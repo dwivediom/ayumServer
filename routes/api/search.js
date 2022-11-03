@@ -31,11 +31,13 @@ router.get("/search/:key",(req,res)=>{
             id: 1,
             name: 1,
             phone: 1 , 
+            hospital:1,
+            city:1,
             clinic:"$searchdata.clinic",
            
             location: "$searchdata.location",
             timing: "$searchdata.timing",
-            specialists: '$searchdata.specialists',
+            specialist: '$searchdata.specialist',
             fees: '$searchdata.fees',
           
     
@@ -43,9 +45,11 @@ router.get("/search/:key",(req,res)=>{
     
           { $match : {
             "$or":[
-                {"specialists":{$regex:keys}},
+                {"specialist":{$regex:keys}},
                 {"name":{$regex:keys}},
                 {" clinic":{$regex:keys}},
+                {"Hospital":{$regex:keys}},
+                {"city":{$regex:keys}},
                
               
               

@@ -17,7 +17,7 @@ const UserSchema= new mongoose.Schema({
  }, 
  password: { 
     type: String, 
-    required: true},
+    required: false},
 avatar: { 
     type: String, 
 }, 
@@ -27,10 +27,16 @@ appointment:[
  doctor: { 
     type: Schema.Types.ObjectId, 
     ref: 'doctors'}, 
+ docname:{ 
+      type:String 
+ }   ,
  
 bookingid: { 
     type:Number, 
 }, 
+appointmentno:{
+      type:Number, 
+},
 patientname: { 
     type: String, 
     required: true},
@@ -48,7 +54,7 @@ age: {
 date: {
     type: Date, 
 } , 
-discription: { 
+description: { 
     type: String, 
 } , 
 name: { 
@@ -60,6 +66,9 @@ avatar: {
 date: { 
     type: Date, 
      default: Date.now, 
+},
+doclocation:{
+    type:String 
 } 
 
 }] , 

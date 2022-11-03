@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const router =  express.Router();
 const {check , validationResult} = require('express-validator');
-
+const DailyAppo = require('../../model/Dailyappointment')
 const authUser = require('../../middleware/authUser')
 const User= require("../../model/User"); 
 const Doctor = require('../../model/Doctor'); 
@@ -13,7 +13,7 @@ router.post("/:doctor_id",[ authUser,
 [
 check("patientname", "patient name is required").not().isEmpty(), 
 check("age"," age is required").not().isEmpty(), 
-check("description"," description is required").not().isEmpty()]
+  ]
 
 
 ], async(req, res )=> {
@@ -29,9 +29,10 @@ try{
     const doctor = await Doctor.findById(req.params.doctor_id).select('-password');
     console.log("doctor:" ,req.params.doctor_id )
     const profile = await Profile.findOne({doctor: req.params.doctor_id})
-      console.log("doctor:" )
+    let dailyappo = await DailyAppo.findOne({doctor: req.params.doctor_id})
       
-       console.log("profile:", profile)
+
+     
 
     // create booking id 
     function appointmentgenrator(){ 
@@ -56,6 +57,65 @@ try{
            const appointmentId = create_id.generate(); 
 
 
+
+
+
+           if(dailyappo){
+
+            let dailyPatinet= { 
+             bookingId : appointmentId , 
+             patientname: req.body.patientname , 
+             fathername: req.body.fathername , 
+             status: req.body.status , 
+             age: req.body.age,
+             date: req.body.date, 
+             description: req.body.description , 
+             avatar: user.avatar ,
+             name: user.name ,
+             user    : req.user.id ,
+             appointmentno: dailyappo.patients.length +1
+            }
+            dailyappo.patients.push(dailyPatinet); 
+            await dailyappo.save()
+            
+ 
+           }else{
+             let dailyappo = new DailyAppo({ 
+               doctor: req.params.doctor_id, 
+               name :doctor.name ,  
+           
+           })
+           await dailyappo.save()
+           let dailyPatinet= { 
+             bookingId : appointmentId , 
+             patientname: req.body.patientname , 
+             fathername: req.body.fathername , 
+             status: req.body.status , 
+             age: req.body.age,
+             date: req.body.date, 
+             description: req.body.description , 
+             avatar: user.avatar ,
+             name: user.name ,
+             user    : req.user.id ,
+             appointmentno: dailyappo.patients.length +1
+            }
+            dailyappo.patients.push(dailyPatinet); 
+            await dailyappo.save()
+            
+ 
+           }
+             
+
+
+      
+
+
+
+           dailyappo = await DailyAppo.findOne({doctor: req.params.doctor_id})
+
+
+
+
            const newPatinet= { 
             bookingId : appointmentId , 
             patientname: req.body.patientname , 
@@ -72,25 +132,38 @@ try{
 
            const newAppointment = { 
              bookingId : appointmentId,
+             docname:doctor.name,
+             doclocation:profile.location,
              patientname:   req.body.patientname ,
              fathername: req.body.fathername ,
              status: req.body.status ,
              age: req.body.age ,
              date: req.body.date ,
              description: req.body.description ,
-             avatar: doctor.avatar ,
-             name: doctor.name ,             
-             doctor: doctor.id
+             avatar: doctor.avatar ,       
+             doctor: doctor.id,
+             appointmentno: dailyappo.patients.length, 
+            
            }
 
-            
+           console.log(profile.location)
+           
+           
+     
+
     
-    console.log( "pofile.paitnt:" ,  profile.patients)
-    profile.patients.unshift(newPatinet); 
+
+    profile.patients.push(newPatinet); 
     await  profile.save(); 
 
     user.appointment.unshift(newAppointment)
     await user.save();
+    
+ 
+    //  await DailyAppo.collection.drop();
+   
+    
+
 
     res.json(user)
 
