@@ -1,13 +1,11 @@
-const mongoose = require('mongoose'); //
+const  mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+ 
 
-const DailyappointmentSchema = new mongoose.Schema({ 
+const ClinicSchema = new mongoose.Schema({ 
     doctor :{ 
         type :  mongoose.Schema.Types.ObjectId, 
         ref: "doctor"
-    }, 
-    name:{
-         type:String , 
     }, 
     clinic:[{
         clinicName:{
@@ -68,19 +66,10 @@ const DailyappointmentSchema = new mongoose.Schema({
                   date: {
                       type: Date,
                       default: Date.now
-                  },
-                  appointmentno:{
-                     type:Number
                   }
             }
-        ]
-    }], 
+        ]}]
+    }); 
 
-
-date: { 
-    type: Date,
-    default:Date.now}
-
-})
-module.exports = Doctor= mongoose.model('Dailyappointment', DailyappointmentSchema); 
-
+    module.exports = Profile = mongoose.model('clinic',ClinicSchema);
+     

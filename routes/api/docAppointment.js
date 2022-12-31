@@ -4,12 +4,13 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const DailyAppo = require('../../model/Dailyappointment')
 const authUser = require('../../middleware/authUser')
+const authDoctor = require('../../middleware/authDoctor');
 const User = require("../../model/User");
 const Doctor = require('../../model/Doctor');
 const Profile = require('../../model/Profile');
 
-//route :  http://localhost:5000/api/appointment/:doctorid 
-router.post("/:doctor_id/:clinic_id", [authUser,
+//route :  http://localhost:5000/api/docappointment/:clinic_id 
+router.post("/:clinic_id", [authDoctor,
   [
     check("patientname", "patient name is required").not().isEmpty(),
     check("age", " age is required").not().isEmpty(),
@@ -24,12 +25,12 @@ router.post("/:doctor_id/:clinic_id", [authUser,
 
   try {
 
-    const user = await User.findById(req.user.id).select('-password');
+  
 
-    const doctor = await Doctor.findById(req.params.doctor_id).select('-password');
+    const doctor = await Doctor.findById(req.doctor.id).select('-password');
     console.log("doctor:", req.params.doctor_id)
-    const profile = await Profile.findOne({ doctor: req.params.doctor_id })
-    let dailyappo = await DailyAppo.findOne({ doctor: req.params.doctor_id })
+    const profile = await Profile.findOne({ doctor: req.doctor.id })
+    let dailyappo = await DailyAppo.findOne({ doctor: req.doctor.id })
 
 
 
@@ -58,21 +59,7 @@ router.post("/:doctor_id/:clinic_id", [authUser,
 
 
 
-    const newAppointment = {
-      bookingId: appointmentId,
-      docname: doctor.name,
-      doclocation: profile.location,
-      patientname: req.body.patientname,
-      fathername: req.body.fathername,
-      status: req.body.status,
-      age: req.body.age,
-      date: req.body.date,
-      description: req.body.description,
-      avatar: doctor.avatar,
-      doctor: doctor.id,
-      //  appointmentno: dailyappo.patients.length, 
-
-    }
+    
 
     if (dailyappo) {
 
@@ -84,9 +71,9 @@ router.post("/:doctor_id/:clinic_id", [authUser,
         age: req.body.age,
         date: req.body.date,
         description: req.body.description,
-        avatar: user.avatar,
-        name: user.name,
-        user: req.user.id,
+        name: `by ${doctor.name}`
+        
+       
        
       }
       let unique =dailyappo.clinic.map(async (obj) => {
@@ -95,9 +82,8 @@ router.post("/:doctor_id/:clinic_id", [authUser,
         let objId = obj._id.toString();
         if (objId === clinicId) {
           console.log("object3 ",obj)
-          newAppointment.clinicName=obj.clinicName;
-          console.log('hellow2')
-          newAppointment.appointmentno= obj.patients.length +1; 
+        
+        
           dailyPatinet.appointmentno= obj.patients.length +1; 
           await obj.patients.push(dailyPatinet);
         }
@@ -121,9 +107,9 @@ router.post("/:doctor_id/:clinic_id", [authUser,
         date: req.body.date,
         description: req.body.description,
 
-        avatar: user.avatar,
-        name: user.name,
-        user: req.user.id,
+       
+        name: `by ${doctor.name}`,
+        
         
       }
       let unique = dailyappo.clinic.map(async (obj) => {
@@ -131,10 +117,7 @@ router.post("/:doctor_id/:clinic_id", [authUser,
         let clinicId = req.params.clinic_id.toString();
         let objId = obj._id.toString();
         if (objId === clinicId) {
-          console.log("object4 ",obj)
-          newAppointment.clinicName=obj.clinicName;
-          console.log('hellow2')
-          newAppointment.appointmentno= obj.patients.length +1; 
+         
           dailyPatinet.appointmentno= obj.patients.length +1;
           await obj.patients.push(dailyPatinet);
         }
@@ -150,7 +133,7 @@ router.post("/:doctor_id/:clinic_id", [authUser,
 
 
 
-    dailyappo = await DailyAppo.findOne({ doctor: req.params.doctor_id })
+    dailyappo = await DailyAppo.findOne({ doctor:req.doctor.id })
 
 
 
@@ -163,9 +146,9 @@ router.post("/:doctor_id/:clinic_id", [authUser,
       age: req.body.age,
       date: req.body.date,
       description: req.body.description,
-      avatar: user.avatar,
-      name: user.name,
-      user: req.user.id
+      
+      name: `by ${doctor.name}`,
+     
     }
 
 
@@ -192,16 +175,15 @@ router.post("/:doctor_id/:clinic_id", [authUser,
 
     await profile.save();
 
-    user.appointment.unshift(newAppointment)
-    await user.save();
+    
 
 
-    //  await DailyAppo.collection.drop();
+    
 
 
 
 
-    res.json(user)
+    res.json(profile)
 
   } catch (err) {
     console.log(err.message);

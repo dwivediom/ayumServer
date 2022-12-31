@@ -37,6 +37,9 @@ bookingid: {
 appointmentno:{
       type:Number, 
 },
+clinicName:{
+    type:String
+},
 patientname: { 
     type: String, 
     required: true},

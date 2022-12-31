@@ -9,12 +9,27 @@ const ProfileSchema = new mongoose.Schema({
         type :  mongoose.Schema.Types.ObjectId, 
         ref: "doctor"
     }, 
-    clinic:{ 
+     bio: { 
         type: String, 
+    },
+     status:{ 
+        type: String, 
+      
     }, 
     website:{ 
         type: String, 
     }, 
+    specialist: { 
+        required : true,
+       type: String, 
+
+   } , 
+    clinic:[{
+    clinicName:{
+        type:String
+    }, 
+    
+    
     location:{ 
         type: String, 
         required: true, 
@@ -23,21 +38,12 @@ const ProfileSchema = new mongoose.Schema({
         type: String, 
         required: true, 
     }, 
-    status:{ 
-        type: String, 
-      
-    }, 
-    specialist: { 
-         required : true,
-        type: String, 
-
-    } , 
+    
+    
     fees : { 
         type: String, 
     },
-    bio: { 
-        type: String, 
-    }, 
+   
     patients:[
         {
             user: {
@@ -79,7 +85,8 @@ const ProfileSchema = new mongoose.Schema({
                   default: Date.now
               }
         }
-    ], 
+    ]
+}], 
     review: [
         { 
             user: {

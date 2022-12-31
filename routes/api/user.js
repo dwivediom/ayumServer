@@ -52,7 +52,7 @@ router.post('/register', [
         //encrypt the password using  bcrypt
         const salt = await bcrypt.genSalt(5);
 
-        user.password = await bcrypt.hash(password, salt);
+        user.password = await bcrypt.hash(password,salt);
         await user.save();
 
 
